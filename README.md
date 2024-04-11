@@ -29,3 +29,7 @@ This project was developed as part of a course project at KTH Royal Institute of
 * Johan Ahnfalk
 * Vidar Greinsmark
 * Johan Hallberg
+
+## References
+
+[1] Svea: an experimental testbed for evaluating v2x use-cases, F. J. Jiang, M. Al-Janabi, T. Bolin, K. H. Johansson, J. Mårtensson, IEEE 25th International Conference on Intelligent Transportation Systems, 2022.
