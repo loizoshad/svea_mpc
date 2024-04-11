@@ -17,7 +17,7 @@ A demonstration of an implementation on the real robot can be seen in the video 
 
 
 <video width="580" height="340" controls>
-  <source src="demo/parallel.mp4" type="video/mp4">
+  <source src="https://github.com/loizoshad/svea_mpc/blob/main/demo/parallel.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
