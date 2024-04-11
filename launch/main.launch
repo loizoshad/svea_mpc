@@ -1,0 +1,72 @@
+<?xml version="1.1"?>
+<launch>
+
+    <!-- Launch file arguments -->
+    <arg name="map"             default="floor2"/>
+    <arg name="is_sim"          default="true"/>
+    <arg name="use_rviz"        default="true"/>
+    <arg name="remote_rviz"     default="false"/>
+    <arg name="run_lidar"       default="false"/>
+    <arg name="use_lidar_plot"  default="false"/>
+    <arg name="cc_emulator"     default="true"/>
+    <arg name="park_emulator"   default="true"/>
+    <arg name="infra_sim"       default="false"/>
+    <arg name="use_comms"       default="false"/>
+    <arg name="ctrl_type"       default="NLMPC"/>  <!-- PPC, NLMPC -->
+
+    <!-- Start map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find svea_core)/maps/$(arg map).yaml" output="screen"/>
+
+    <rosparam command="load" file="$(find svea_core)/params/obstacles.yaml" />
+    
+    <!-- Start intra-group communication -->
+    <include if="$(eval use_comms)" file="$(find el2425_standards)/launch/park.launch"/>
+
+    <group unless="$(arg is_sim)">
+        <!-- Start low-level interface -->
+        <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+            <param name="port" value="/dev/ttyACM0"/>
+            <param name="baud" value="250000"/>
+        </node>
+
+        <!-- Start localization -->
+        <include file="$(find svea_sensors)/launch/localize.launch"/>
+
+    </group>
+
+    <!-- Start RViz -->
+    <node if="$(eval use_rviz and not remote_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find park)/rviz/custom_config.rviz"/>
+
+    <!-- Start obstacle manager -->
+    <node name="obstacle_manager" pkg="park" type="obstacle_manager.py" output="screen"> 
+        <param name="use_lidar_plot" value="$(arg use_lidar_plot)"/>
+    </node>
+
+    <!-- Start state machine -->
+    <node name="state_machine" pkg="park" type="state_machine.py" output="screen">
+        <param name="is_sim"    value="$(arg is_sim)"/>
+        <param name="run_lidar"    value="$(arg run_lidar)"/>
+        <param name="use_rviz"  value="$(arg use_rviz)"/>
+        <param name="ctrl_type"  value="$(arg ctrl_type)"/>
+        <rosparam>
+            # initial state (x, y, yaw)
+            #state: [-7.4, -15.3, 0.9]      # Hallway right outside project room
+            #state: [1.55, -2.24, -2.24]    # Taped postition
+            #state: [-2.82, -7.56, 0.9]     # Next to the couch?
+            #state: [-4.5, -6, 0] 
+            
+            #state: [-5.43, -1.71, -0.61]   # Testing parallel parking
+            state: [3.66, 4.78, -0.61]      # Testing perpendicular parking
+        </rosparam>
+    </node>
+
+    <!-- Start CC emulator to send and receive path -->
+    <node if="$(eval cc_emulator)" name="CC_emulator" pkg="park" type="cc_emulator.py" output="screen"/>
+
+    <!-- Start Parking Information emulator to send and receive path -->
+    <node if="$(eval park_emulator)" name="Park_emulator" pkg="park" type="cc_park_info_emulator.py" output="screen"/>
+
+    <!-- Start infra-sim -->
+    <node if="$(eval infra_sim)" name="infra_sim" pkg="park" type="infra_sim.py" output="screen"/>
+
+</launch>

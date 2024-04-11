@@ -1,0 +1,10 @@
+<?xml version="1.1"?>
+<launch>
+
+    <!-- Start obstacle manager -->
+    <node name="infra_sim" pkg="park" type="infra_sim.py" 
+        output="screen"> 
+    </node>
+
+</launch>
+

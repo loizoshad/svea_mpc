@@ -1,0 +1,12 @@
+<?xml version="1.1"?>
+<launch>
+    <!-- Launch file arguments -->
+    <arg name="use_lidar_plot" default="false"/>
+    
+    <!-- Start obstacle manager -->
+    <node name="obstacle_manager" pkg="park" type="obstacle_manager.py" output="screen"> 
+        <param name="use_lidar_plot" value="$(arg use_lidar_plot)"/>
+    </node>
+
+</launch>
+
