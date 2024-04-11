@@ -15,7 +15,15 @@ The package requires that the SVEA framework https://github.com/KTH-SML/svea is 
 
 A demonstration of an implementation on the real robot is shown here.
 
+<<<<<<< HEAD
 <img src="demo/parallel.gif" alt="Alt Text" width="560" height="358">
+=======
+
+<video width="580" height="340" controls>
+  <source src="https://github.com/loizoshad/svea_mpc/blob/main/demo/parallel.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+>>>>>>> 0c31fda3cefc4ce86b8fdb055d51a29281e9f3a6
 
 
 ## Collaborators
